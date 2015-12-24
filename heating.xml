@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<heating>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>16:00</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>21:48</time>
+		<targetTemp>50</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>21:49</time>
+		<targetTemp>35</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Mon</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	
+	<schedule type="Manual">
+		<day>Tue</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Tue</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Tue</day>
+		<time>16:00</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Tue</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Tue</day>
+		<time>20:00</time>
+		<targetTemp>19</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Tue</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	
+	<schedule type="Manual">
+		<day>Wed</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Wed</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Wed</day>
+		<time>16:00</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Wed</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Wed</day>
+		<time>20:00</time>
+		<targetTemp>19</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Wed</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>00:01</time>
+		<targetTemp>10</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>00:30</time>
+		<targetTemp>12</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>01:00</time>
+		<targetTemp>14</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>16:00</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>20:00</time>
+		<targetTemp>19</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Thu</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	
+	<schedule type="Manual">
+		<day>Fri</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Fri</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Fri</day>
+		<time>16:00</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Fri</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Fri</day>
+		<time>20:00</time>
+		<targetTemp>19</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Fri</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	
+	<schedule type="Manual">
+		<day>Sat</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sat</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sat</day>
+		<time>16:00</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sat</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sat</day>
+		<time>20:00</time>
+		<targetTemp>19</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sat</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	
+	<schedule type="Manual">
+		<day>Sun</day>
+		<time>06:30</time>
+		<targetTemp>21</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sun</day>
+		<time>08:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sun</day>
+		<time>16:27</time>
+		<targetTemp>1</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sun</day>
+		<time>18:00</time>
+		<targetTemp>20</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sun</day>
+		<time>22:15</time>
+		<targetTemp>1</targetTemp>
+	</schedule>
+	<schedule type="Manual">
+		<day>Sun</day>
+		<time>22:00</time>
+		<targetTemp>18</targetTemp>
+	</schedule>
+</heating>
