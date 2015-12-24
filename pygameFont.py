@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pygame
-import os
+import os, sys
 import datetime, time, logging
 import RPi.GPIO as GPIO
 import urllib, json, atexit
@@ -48,8 +48,10 @@ def my_callback(channel):
 	#else:
 	if(channel == switchUp):
 		targetTemp = targetTemp +1
+		logger.info("Target Temp Increased to %s", targetTemp)
 	if(channel == switchDown):
 		targetTemp = targetTemp -1
+		logger.info("Target Temp Decreased to %s", targetTemp)
 	#print targetTemp
 	#	buttonPressed = GPIO.input(channel)
 	#print buttonPressed
@@ -60,13 +62,15 @@ def turnHeating(action):
 		if (heatingStatus == 0):
 			#turn the heating on, this consists of the pump and the boiler
 			#print "Function Turning Heating On!"
-			heatingStatus = 1		
+			heatingStatus = 1
+			logger.info("Heating Turned On")			
 			
 	else:
 		if ( heatingStatus == 1):
 			#Turn the heating off
 			#print "Funtion Turning Heating Off"
 			heatingStatus = 0
+			logger.info("Heating Turned Off")
 
 def checkRiverLevel():
 	GPIO.output(statusLed, 1)
@@ -98,18 +102,21 @@ def checkThermostat():
 	##########################################
 	## TODO : Configure to use Temp Sensor  ##
 	########################################## 
-	currentTemp = sensor.get_temperature()
-	if(int(currentTemp) < targetTemp + hysteresis):
+	currentTemp = int(sensor.get_temperature())
+	if(int(currentTemp) <= (targetTemp - hysteresis)):
 		#turn the heating on
 		#print("heating should be on")
 		turnHeating(action="on")
-	elif (int(currentTemp) - int(hysteresis) > targetTemp):
+		logger.debug("Heating Should be on T=%s, C=%s",targetTemp, currentTemp)
+	elif (int(currentTemp) >= (targetTemp + hysteresis)):
 		#turn the heating off
 		#print("heating should be off")
 		turnHeating(action="off")
+		logger.debug("Heating Should be off T=%s, C=%s",targetTemp, currentTemp)
 	else:
 		#Inside hysteresis curve(?)
-		print "Not gonna do anything as inside hysteresis curve"
+		#print "Not gonna do anything as inside hysteresis curve"
+		logger.debug("temp inside hysteresis T=%s, C=%s",targetTemp, currentTemp)
 
 def checkHeatingSchedule():
 	global targetTemp
@@ -117,12 +124,19 @@ def checkHeatingSchedule():
 	dayNow = datetime.datetime.strftime(datetime.datetime.now(), '%a')
 	for action in heatingSchedule:
 		if (action[0] == dayNow):
+			#logger.debug("Is in correct day")
 			if ( action[1] == timeNow):
 				targetTemp = action[2]
+				logger.debug("Found the time, chaging target temp")
+				logger.info("Set the target temp to %s", targetTemp)
 
 def loadXml():
 	global heatingSchedule
-	tree = ET.parse('/home/pi/python/HomeCentralHeating/heating.xml')
+	try:
+		tree = ET.parse('/home/pi/python/HomeCentralHeating/heating.xml')
+	except:
+		logger.exception('Unable to load XML File')
+		raise
 	root = tree.getroot()
 	for schedule in root.findall('schedule'):
 		day = schedule.find('day').text
@@ -130,6 +144,7 @@ def loadXml():
 		temp = schedule.find('targetTemp').text
 		toAdd = [str(day), str(time), int(temp)]
 		heatingSchedule.append(toAdd)
+		logger.debug("Added %s, %s, %s to heatingSchedule", day, time, temp)
 	#print "loaded XML"
 	
 def initHeating():
@@ -145,9 +160,12 @@ def initHeating():
 			if (event[1] <= timeNow):
 				print event
 				targetTemp = event[2]
+				logger.debug("Found the time, chaging target temp")
+				logger.info("Set the target temp to %s", targetTemp)
 
 def exit_handler():
-	print 'My application is ending!'
+	#print 'My application is ending!'
+	logger.exception('Been told to die')
 	GPIO.cleanup()
 
 def notificationBar():
@@ -171,6 +189,14 @@ def mainScreen():
 		currentColour = colourGreen
 	if(int(currentTemp) >= 23):
 		currentColour = colourRed
+		
+	if(targetTemp <= 17):
+		targetColour = colourBlue
+	if(targetTemp > 17):
+		targetColour = colourGreen
+	if(targetTemp > 21):
+		targetColour = colourRed
+	
 	currentTempLarge = create_text(str(currentTemp), font_preferences, 172, currentColour)
 	targetTempLarge = create_text(str(targetTemp), font_preferences, 72, targetColour)
 
@@ -182,12 +208,12 @@ logger.setLevel(logging.INFO)
 
 # create a file handler
 
-handler = logging.FileHandler('/var/log/thermostat.log')
-handler.setLevel(logging.DEBUG)
+#handler = logging.FileHandler('/var/log/thermostat.log')
+handler = logging.StreamHandler(sys.stdout)
 
 # create a logging format
 
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 
 # add the handlers to the logger
@@ -216,12 +242,22 @@ hysteresis = 1
 currentTemp = 19
 heatingStatus = 0
 
-sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, "0000072b5043")
+#load temp sensor
+try:
+	sensor = W1ThermSensor(W1ThermSensor.THERM_SENSOR_DS18B20, "0000072b5043")
+except:
+	logger.exception('Temp Sensor error')
+	raise
 
 #images
-flameIcon = pygame.image.load("/home/pi/python/HomeCentralHeating/resources/flame.png")
-#mailIcon =
-#meterReading = 
+try:
+	flameIcon = pygame.image.load("/home/pi/python/HomeCentralHeating/resources/flame.png")
+	#mailIcon =
+	#meterReading = 
+except:
+	logger.exception('Unable to load Image(s)')
+	raise
+
 
 #software debounce
 time_stamp = time.time()
