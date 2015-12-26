@@ -71,14 +71,41 @@ def turnHeating(action):
 			#print "Funtion Turning Heating Off"
 			heatingStatus = 0
 			logger.info("Heating Turned Off")
+			
+def helperMap(x, inMin, inMax, outMin, outMax):
+	x = float(x)
+	return (x - inMin)*(outMax - outMin) // (inMax - inMin) + outMin
+	
+def drawGuage(value, x, y, width, height, bars, outlineColour, fillColour):
+	value = float(value)
+	pygame.draw.rect(screen, outlineColour, pygame.Rect(x,y,width,height),1)
+	#draw the river Level
+	pygame.draw.rect(screen, fillColour,
+				pygame.Rect(x+1,height+18,width-2,helperMap(value,0,4,0,-(height-4))))
+	#draw the meter markers
+	pygame.draw.line(screen, colourWhite, (x, helperMap(1,0,4,y,y+height-2)), (x+width, helperMap(1,0,4,y,y+height-2)), 1)
+	pygame.draw.line(screen, colourWhite, (x, helperMap(2,0,4,y,y+height-2)), (x+width, helperMap(2,0,4,y,y+height-2)), 1)
+	pygame.draw.line(screen, colourWhite, (x, helperMap(3,0,4,y,y+height-2)), (x+width, helperMap(3,0,4,y,y+height-2)), 1)
+	#pygame.draw.line(screen, colourWhite, (x, helperMap(3,0,4,0,height-2)), (x+width, helperMap(3,0,4,0,height-2)), 1)
+	#pygame.draw.line(screen, colourWhite, (x, helperMap(3,0,4,0,height-2)), (x+width, helperMap(3,0,4,0,height-2)), 1)
+	#pygame.draw.line(screen, colourWhite,(455, 82), (480,82), 1)
+	#pygame.draw.line(screen, colourWhite,(455, 145), (480, 145), 1)
+	#pygame.draw.line(screen, colourWhite,(455, 207), (480, 207), 1)
+	
 
 def checkRiverLevel():
+	global riverLevelInt
 	GPIO.output(statusLed, 1)
 	response = urllib.urlopen(stationUrl)
 	data = json.load(response)
 	riverLevel = str(data["items"]["measures"]["latestReading"]["dateTime"]) +","+str(data["items"]["measures"]["latestReading"]["value"])
 	GPIO.output(statusLed, 0)
-	return riverLevel
+	#return riverLevel
+	river = riverLevel.split(",")
+	logger.debug("River Level = %s", river[1])
+	riverInt = river[1]
+	type(riverInt)
+	riverLevelInt = riverInt
 
 def checkFloodAlert():
 	GPIO.output(statusLed, 1)
@@ -92,7 +119,9 @@ def checkFloodAlert():
 		for alert in data["items"]:
 			floodAlert += str(alert["floodAreaID"]) + "," + str(alert["severityLevel"]) + "," + str(alert["timeRaised"]) +","+ str(alert["timeSeverityChanged"]) +"\n"
 			#print floodAlert
-		return floodAlert
+		print floodAlert
+	else:
+		print "No Flood alerts"
 		
 
 def checkThermostat():
@@ -202,7 +231,13 @@ def mainScreen():
 
 	screen.blit(currentTempLarge, ((480 / 2)- currentTempLarge.get_width() /2, (320 /2) - currentTempLarge.get_height() /2))
 	screen.blit(targetTempLarge, (480 - targetTempLarge.get_width(), 320 - targetTempLarge.get_height()))
-
+	
+	### RIVER LEVEL ###
+	#drawGuage(riverLevelInt, 455, 20, 25, 250, 4, colourWhite, colourBlue)
+	drawGuage(riverLevelInt, 455, 20, 25, 250, 4, colourWhite, colourBlue)
+	
+	
+	
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -241,6 +276,8 @@ targetTemp = 21
 hysteresis = 1
 currentTemp = 19
 heatingStatus = 0
+
+riverLevelInt = 0
 
 #load temp sensor
 try:
@@ -294,10 +331,13 @@ done = False
 pygame.mouse.set_visible(False)
 
 #colours
-colourRed = [100,0,0]
-colourOrange = [100,46,0]
-colourBlue = [0,58,60]
-colourGreen = [0,80,0]
+colourRed = [255,0,0]
+colourOrange = [255,100,0]
+colourYellow = [255,255,0]
+colourCyan = [0,255,255]
+colourBlue = [0,0,255]
+colourGreen = [0,255,0]
+colourMagenta = [255,0,255]
 colourBlack = [0,0,0]
 colourWhite = [255,255,255]
 
@@ -311,6 +351,10 @@ text = create_text("Hello, World", font_preferences, 72, (0, 128, 0))
 
 loadXml()
 initHeating()
+checkRiverLevel()
+tw = time.time()
+tf = time.time()
+tr = time.time()
 
 while not done:
 	for event in pygame.event.get():
@@ -318,6 +362,20 @@ while not done:
 			done = True
 		if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
 			done = True
+	
+	#check river Level
+	timeRiver = time.time()
+	if (timeRiver - tr >= 900):
+		logger.debug("Checking River Level")
+		checkRiverLevel()
+		tr = time.time()
+		
+	#check floodAlerts Level
+	timeFlood = time.time()
+	if (timeFlood - tf >= 900):
+		logger.debug("Checking Flood Alert")
+		checkFloodAlert()
+		tf = time.time()
 	
 	screen.fill(colourBlack)
 	notificationBar()
