@@ -58,12 +58,15 @@ def my_callback(channel):
 
 def turnHeating(action):
 	global heatingStatus
+	handle = open('/dev/ttyAMA0', 'w')
 	if( action == "on"):
 		if (heatingStatus == 0):
 			#turn the heating on, this consists of the pump and the boiler
 			#print "Function Turning Heating On!"
 			heatingStatus = 1
 			logger.info("Heating Turned On")			
+			#send the command to node 17
+			handle.write("1,1,17s")
 			
 	else:
 		if ( heatingStatus == 1):
@@ -71,6 +74,10 @@ def turnHeating(action):
 			#print "Funtion Turning Heating Off"
 			heatingStatus = 0
 			logger.info("Heating Turned Off")
+			#send command to node 17
+			handle.write("0,0,17s")
+			
+	handle.close()
 			
 def helperMap(x, inMin, inMax, outMin, outMax):
 	x = float(x)
@@ -239,7 +246,7 @@ def mainScreen():
 	
 	
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 # create a file handler
 
